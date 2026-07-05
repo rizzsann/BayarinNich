@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BayarinNich - Aplikasi Pembayaran Terpadu</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: '#0d9488', primaryDark: '#0f766e', bgDark: '#111827', cardDark: '#1f2937' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased transition-colors duration-300 dark:bg-bgDark dark:text-gray-100 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Desktop) -->
+    <aside class="hidden md:flex flex-col w-64 bg-white dark:bg-cardDark border-r border-gray-200 dark:border-gray-800 h-full shadow-lg z-20 transition-colors duration-300">
+        <div class="p-6 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700">
+            <img src="logo-bayarinnich.png" alt="Logo BayarinNich" class="w-28 h-12 object-contain drop-shadow-md">
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-500 tracking-tight">BayarinNich</h1>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
+            <button onclick="app.navigate('dashboard')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all duration-200 active" data-target="dashboard">
+                <i class="fa-solid fa-house w-5 text-center"></i> Beranda
+            </button>
+            <button onclick="app.navigate('tagihan')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all duration-200 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" data-target="tagihan">
+                <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Tagihan Umum
+            </button>
+            <button onclick="app.navigate('spp')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all duration-200 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" data-target="spp">
+                <i class="fa-solid fa-graduation-cap w-5 text-center"></i> Biaya Kuliah
+            </button>
+            <button onclick="app.navigate('pulsa')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all duration-200 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" data-target="pulsa">
+                <i class="fa-solid fa-mobile-screen-button w-5 text-center"></i> Pulsa & Paket
+            </button>
+            <button onclick="app.navigate('riwayat')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-all duration-200 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" data-target="riwayat">
+                <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i> Riwayat
+            </button>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+            <button onclick="app.toggleTheme()" class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:inline"></i>
+                <span class="dark:hidden">Dark Mode</span>
+                <span class="hidden dark:inline">Light Mode</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-gray-50 dark:bg-bgDark">
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden flex items-center justify-between p-4 bg-white dark:bg-cardDark shadow-sm z-10 border-b border-gray-200 dark:border-gray-800">
+            <div class="flex items-center gap-2">
+                <img src="logo-bayarinnich.png" alt="Logo" class="w-24 h-10 object-contain drop-shadow-sm">
+                <h1 class="text-xl font-bold text-primary">BayarinNich</h1>
+            </div>
+            <button onclick="app.toggleTheme()" class="text-gray-500 p-2">
+                <i class="fa-solid fa-moon dark:hidden text-xl"></i>
+                <i class="fa-solid fa-sun hidden dark:inline text-xl text-yellow-400"></i>
+            </button>
+        </header>
+
+        <!-- Scrollable Views -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar relative pb-24 md:pb-8" id="main-scroll-area">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="view-section active animate-fade-in">
+                <!-- User Profile & Balance Card -->
+                <div class="bg-gradient-to-br from-primary to-primaryDark rounded-2xl p-6 text-white shadow-xl mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+                    <div class="absolute right-20 -bottom-10 w-32 h-32 bg-white opacity-10 rounded-full blur-xl"></div>
+                    
+                    <div class="flex justify-between items-start relative z-10">
+                        <div class="flex items-center gap-4">
+                            <img src="https://ui-avatars.com/api/?name=Muhammad+Rizki+Hasan&background=fff&color=0d9488" alt="Profile" class="w-12 h-12 rounded-full border-2 border-white/30 shadow-md">
+                            <div>
+                                <p class="text-sm text-teal-100 opacity-90">Selamat Datang,</p>
+                                <h2 class="text-xl font-bold" id="user-name-display">Muhammad Rizki Hasan</h2>
+                                <p class="text-xs text-teal-100/80 font-mono mt-0.5">NIM: 211011450409</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 relative z-10">
+                        <p class="text-sm text-teal-100 mb-1">Saldo Tersedia</p>
+                        <div class="flex items-end gap-2">
+                            <span class="text-3xl font-bold tracking-tight" id="user-balance-display">Rp 15.000.000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Grid -->
+                <h3 class="text-lg font-bold mb-4 dark:text-white">Layanan Kami</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <button onclick="app.navigate('tagihan')" class="bg-white dark:bg-cardDark p-4 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center gap-3 group border border-gray-100 dark:border-gray-800">
+                        <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-bolt"></i></div>
+                        <span class="font-medium text-sm dark:text-gray-200">Listrik PLN</span>
+                    </button>
+                    <button onclick="app.navigate('tagihan')" class="bg-white dark:bg-cardDark p-4 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center gap-3 group border border-gray-100 dark:border-gray-800">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-droplet"></i></div>
+                        <span class="font-medium text-sm dark:text-gray-200">PDAM</span>
+                    </button>
+                    <button onclick="app.navigate('spp')" class="bg-white dark:bg-cardDark p-4 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center gap-3 group border border-gray-100 dark:border-gray-800">
+                        <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <span class="font-medium text-sm dark:text-gray-200">Biaya Kuliah</span>
+                    </button>
+                    <button onclick="app.navigate('pulsa')" class="bg-white dark:bg-cardDark p-4 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center gap-3 group border border-gray-100 dark:border-gray-800">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-500 flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="fa-solid fa-wifi"></i></div>
+                        <span class="font-medium text-sm dark:text-gray-200">Pulsa & Data</span>
+                    </button>
+                </div>
+
+                <!-- Promo Banner -->
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white shadow-lg flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-lg mb-1">Cashback 50% Biaya Kuliah!</h4>
+                        <p class="text-sm opacity-90 max-w-sm">Bayar SPP sekarang lebih hemat. Gunakan kode promo BAYARKAMPUS.</p>
+                    </div>
+                    <i class="fa-solid fa-gift text-5xl opacity-50"></i>
+                </div>
+            </section>
+
+            <!-- Tagihan View -->
+            <section id="view-tagihan" class="view-section hidden">
+                <h2 class="text-2xl font-bold mb-6 dark:text-white">Bayar Tagihan Umum</h2>
+                
+                <div class="bg-white dark:bg-cardDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mb-6">
+                    <div class="flex border-b border-gray-200 dark:border-gray-700">
+                        <button class="flex-1 py-4 text-center font-medium border-b-2 border-primary text-primary" onclick="app.switchTagihanTab('pln', this)">PLN</button>
+                        <button class="flex-1 py-4 text-center font-medium border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary transition-colors" onclick="app.switchTagihanTab('pdam', this)">PDAM</button>
+                        <button class="flex-1 py-4 text-center font-medium border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-primary transition-colors" onclick="app.switchTagihanTab('internet', this)">Internet</button>
+                    </div>
+                    <div class="p-6">
+                        <form id="form-tagihan" onsubmit="event.preventDefault(); app.checkTagihan()">
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">ID Pelanggan / Nomor Meter</label>
+                                <div class="relative">
+                                    <input type="text" id="input-tagihan-id" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Contoh: 123456789012" required>
+                                    <span class="absolute right-4 top-3.5 text-gray-400" id="tagihan-icon"><i class="fa-solid fa-bolt"></i></span>
+                                </div>
+                                <p class="text-xs text-red-500 mt-2 hidden" id="tagihan-error"></p>
+                            </div>
+                            <button type="submit" class="w-full bg-primary hover:bg-primaryDark text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.98] flex justify-center items-center gap-2" id="btn-cek-tagihan">
+                                Cek Tagihan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Result Card (Hidden initially) -->
+                <div id="tagihan-result" class="hidden animate-fade-in bg-white dark:bg-cardDark rounded-2xl shadow-md border border-gray-100 dark:border-gray-800 p-6">
+                    <h3 class="font-bold text-lg border-b dark:border-gray-700 pb-3 mb-4 dark:text-white">Detail Tagihan</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Nama Pelanggan</span><span class="font-medium dark:text-white" id="res-nama"></span></div>
+                        <div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Periode</span><span class="font-medium dark:text-white" id="res-periode"></span></div>
+                        <div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Tagihan</span><span class="font-medium dark:text-white" id="res-amount"></span></div>
+                        <div class="flex justify-between"><span class="text-gray-500 dark:text-gray-400">Denda</span><span class="font-medium dark:text-white" id="res-denda"></span></div>
+                        <div class="flex justify-between pt-3 border-t dark:border-gray-700 text-base font-bold"><span class="dark:text-white">Total Bayar</span><span class="text-primary text-xl" id="res-total"></span></div>
+                    </div>
+                    <button onclick="app.openPaymentModal('tagihan')" class="w-full mt-6 bg-gradient-to-r from-primary to-teal-500 hover:from-primaryDark hover:to-primary text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.98]">Lanjut Pembayaran</button>
+                </div>
+            </section>
+
+            <!-- SPP View -->
+            <section id="view-spp" class="view-section hidden">
+                <h2 class="text-2xl font-bold mb-6 dark:text-white">Pembayaran Biaya Kuliah</h2>
+                
+                <div class="bg-white dark:bg-cardDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-6">
+                    <form id="form-spp" onsubmit="event.preventDefault(); app.checkSPP()">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nomor Induk Mahasiswa (NIM)</label>
+                            <input type="text" id="input-nim" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Masukkan NIM Anda (contoh: 202310001)" required>
+                            <p class="text-xs text-red-500 mt-2 hidden" id="spp-error"></p>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-primaryDark text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.98]" id="btn-cek-spp">Lihat Tagihan Semester</button>
+                    </form>
+                </div>
+
+                <!-- SPP Result List -->
+                <div id="spp-result" class="hidden animate-fade-in bg-white dark:bg-cardDark rounded-2xl shadow-md border border-gray-100 dark:border-gray-800 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg dark:text-white">Daftar Cicilan Semester</h3>
+                        <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded-full font-medium" id="spp-nim-badge"></span>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6" id="spp-list-container">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <div class="border-t dark:border-gray-700 pt-4 flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Total Terpilih</p>
+                            <p class="text-2xl font-bold text-primary" id="spp-total-selected">Rp 0</p>
+                        </div>
+                        <button onclick="app.openPaymentModal('spp')" id="btn-bayar-spp" class="bg-gradient-to-r from-primary to-teal-500 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed" disabled>Bayar Terpilih</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pulsa View -->
+            <section id="view-pulsa" class="view-section hidden">
+                <h2 class="text-2xl font-bold mb-6 dark:text-white">Isi Pulsa & Paket Data</h2>
+                
+                <div class="bg-white dark:bg-cardDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-6">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nomor HP</label>
+                        <div class="relative">
+                            <input type="text" id="input-pulsa" oninput="app.detectProvider(this.value)" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-lg font-medium" placeholder="08..." required>
+                            <div id="provider-logo" class="absolute right-3 top-2 w-auto h-8 px-3 rounded-lg flex items-center justify-center text-white text-sm font-bold opacity-0 transition-opacity duration-300">
+                                <!-- Logo goes here -->
+                            </div>
+                        </div>
+                        <p class="text-xs text-red-500 mt-2 hidden" id="pulsa-error"></p>
+                    </div>
+
+                    <div id="pulsa-options" class="opacity-50 pointer-events-none transition-all duration-300">
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Pilih Nominal</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="pulsa-grid">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Riwayat View -->
+            <section id="view-riwayat" class="view-section hidden">
+                <h2 class="text-2xl font-bold mb-6 dark:text-white">Riwayat Transaksi</h2>
+                
+                <div class="bg-white dark:bg-cardDark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50">
+                        <h3 class="font-bold dark:text-white">Transaksi Terakhir</h3>
+                        <button onclick="app.clearHistory()" class="text-xs text-red-500 hover:text-red-700 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-lg transition-colors"><i class="fa-solid fa-trash mr-1"></i>Bersihkan</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 text-sm">
+                                    <th class="p-4 font-medium border-b dark:border-gray-700">Tanggal</th>
+                                    <th class="p-4 font-medium border-b dark:border-gray-700">Layanan</th>
+                                    <th class="p-4 font-medium border-b dark:border-gray-700">Detail</th>
+                                    <th class="p-4 font-medium border-b dark:border-gray-700">Nominal</th>
+                                    <th class="p-4 font-medium border-b dark:border-gray-700 text-right">Status</th>
+                                    <th class="p-4 font-medium border-b dark:border-gray-700 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body" class="divide-y divide-gray-100 dark:divide-gray-800 text-sm">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="empty-history" class="hidden p-12 text-center text-gray-500 dark:text-gray-400 flex flex-col items-center">
+                        <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4 text-3xl">
+                            <i class="fa-solid fa-receipt opacity-50"></i>
+                        </div>
+                        <p>Belum ada transaksi</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Mobile Bottom Nav -->
+        <nav class="md:hidden fixed bottom-0 w-full bg-white dark:bg-cardDark border-t border-gray-200 dark:border-gray-800 flex justify-around p-2 z-20 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <button onclick="app.navigate('dashboard')" class="mobile-nav-btn p-2 text-primary flex flex-col items-center gap-1 flex-1" data-target="dashboard">
+                <i class="fa-solid fa-house text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Beranda</span>
+            </button>
+            <button onclick="app.navigate('tagihan')" class="mobile-nav-btn p-2 text-gray-400 hover:text-primary flex flex-col items-center gap-1 flex-1" data-target="tagihan">
+                <i class="fa-solid fa-file-invoice-dollar text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Tagihan</span>
+            </button>
+            <button onclick="app.navigate('spp')" class="mobile-nav-btn p-2 text-gray-400 hover:text-primary flex flex-col items-center gap-1 flex-1 relative -top-4" data-target="spp">
+                <div class="bg-primary text-white w-12 h-12 rounded-full flex flex-col items-center justify-center shadow-lg shadow-teal-500/30 border-4 border-gray-50 dark:border-bgDark">
+                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                </div>
+                <span class="text-[10px] font-medium mt-1">SPP</span>
+            </button>
+            <button onclick="app.navigate('pulsa')" class="mobile-nav-btn p-2 text-gray-400 hover:text-primary flex flex-col items-center gap-1 flex-1" data-target="pulsa">
+                <i class="fa-solid fa-mobile-screen-button text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Pulsa</span>
+            </button>
+            <button onclick="app.navigate('riwayat')" class="mobile-nav-btn p-2 text-gray-400 hover:text-primary flex flex-col items-center gap-1 flex-1" data-target="riwayat">
+                <i class="fa-solid fa-clock-rotate-left text-xl mb-1"></i>
+                <span class="text-[10px] font-medium">Riwayat</span>
+            </button>
+        </nav>
+    </main>
+
+    <!-- Payment Modal Overlay -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300 px-4">
+        <div class="bg-white dark:bg-cardDark rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="payment-modal-content">
+            <div class="p-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50">
+                <h3 class="font-bold text-lg dark:text-white">Metode Pembayaran</h3>
+                <button onclick="app.closePaymentModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="p-6">
+                <!-- Summary -->
+                <div class="bg-teal-50 dark:bg-teal-900/20 p-4 rounded-xl mb-6 border border-teal-100 dark:border-teal-800/50 text-center">
+                    <p class="text-sm text-teal-700 dark:text-teal-400 mb-1">Total Pembayaran</p>
+                    <p class="text-3xl font-bold text-teal-800 dark:text-teal-300" id="modal-amount">Rp 0</p>
+                </div>
+
+                <!-- Methods Selection -->
+                <div id="payment-method-selection">
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Pilih Metode:</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-teal-50 dark:has-[:checked]:bg-teal-900/10 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                            <input type="radio" name="pay_method" value="va" class="w-4 h-4 text-primary focus:ring-primary border-gray-300 accent-primary" onchange="app.selectMethod('va')" checked>
+                            <div class="ml-4 flex-1 flex justify-between items-center">
+                                <div>
+                                    <span class="block font-medium dark:text-white">Virtual Account</span>
+                                    <span class="block text-xs text-gray-500">Transfer Bank Otomatis</span>
+                                </div>
+                                <i class="fa-solid fa-building-columns text-gray-400 text-xl"></i>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-teal-50 dark:has-[:checked]:bg-teal-900/10 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                            <input type="radio" name="pay_method" value="qris" class="w-4 h-4 text-primary focus:ring-primary border-gray-300 accent-primary" onchange="app.selectMethod('qris')">
+                            <div class="ml-4 flex-1 flex justify-between items-center">
+                                <div>
+                                    <span class="block font-medium dark:text-white">QRIS</span>
+                                    <span class="block text-xs text-gray-500">Gopay, OVO, Dana, LinkAja</span>
+                                </div>
+                                <i class="fa-solid fa-qrcode text-gray-400 text-xl"></i>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-teal-50 dark:has-[:checked]:bg-teal-900/10 has-[:checked]:ring-1 has-[:checked]:ring-primary">
+                            <input type="radio" name="pay_method" value="teller" class="w-4 h-4 text-primary focus:ring-primary border-gray-300 accent-primary" onchange="app.selectMethod('teller')">
+                            <div class="ml-4 flex-1 flex justify-between items-center">
+                                <div>
+                                    <span class="block font-medium dark:text-white">Kasir / Minimarket</span>
+                                    <span class="block text-xs text-gray-500">Indomaret, Alfamart</span>
+                                </div>
+                                <i class="fa-solid fa-store text-gray-400 text-xl"></i>
+                            </div>
+                        </label>
+                    </div>
+                    <button id="btn-lanjutkan" onclick="app.proceedPaymentStep()" class="w-full mt-6 bg-primary hover:bg-primaryDark text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.98]">Lanjutkan</button>
+                </div>
+
+                <!-- Instruction Section (Hidden initially) -->
+                <div id="payment-instruction" class="hidden">
+                    <button onclick="app.backToMethods()" class="text-sm text-primary mb-4 flex items-center gap-1 hover:underline"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+                    
+                    <div id="inst-va" class="hidden text-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Transfer ke Nomor Virtual Account:</p>
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mb-4 flex justify-between items-center">
+                            <span class="font-mono font-bold text-xl tracking-wider dark:text-white" id="va-number">88001234567890</span>
+                            <button class="text-primary hover:text-primaryDark"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                        <p class="text-xs text-gray-500 text-left mb-4">Bank BCA, BNI, Mandiri, BRI didukung.</p>
+                    </div>
+
+                    <div id="inst-qris" class="hidden text-center flex flex-col items-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Scan QR Code di bawah dengan aplikasi e-Wallet Anda:</p>
+                        <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-200 mb-4 inline-block" id="qrcode-container">
+                            <!-- QR Code rendered here by qrcode.js -->
+                        </div>
+                        <p class="text-xs text-red-500 font-medium mb-4"><i class="fa-regular fa-clock"></i> Sisa waktu: <span id="qris-timer">05:00</span></p>
+                    </div>
+
+
+
+                    <div id="inst-teller" class="hidden text-center">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Tunjukkan Kode Pembayaran ke Kasir:</p>
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 mb-4">
+                            <span class="font-mono font-bold text-2xl tracking-widest text-primary" id="teller-code">BAYAR-XYZ123</span>
+                        </div>
+                        <p class="text-xs text-gray-500">Berlaku di Alfamart, Indomaret, dan Kantor Pos.</p>
+                    </div>
+
+                    <button onclick="app.executePayment()" id="btn-final-pay" class="w-full mt-4 bg-primary hover:bg-primaryDark text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-[0.98] flex justify-center items-center gap-2">
+                        Cek Status Pembayaran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal & Receipt -->
+    <div id="success-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 px-4">
+        <div class="bg-white dark:bg-cardDark rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 text-center" id="success-modal-content">
+            <div class="bg-gradient-to-b from-green-500 to-green-600 p-8 text-white relative">
+                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-green-500 text-4xl mx-auto mb-4 shadow-lg absolute -bottom-10 left-1/2 transform -translate-x-1/2">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="font-bold text-xl mb-1">Pembayaran Berhasil!</h3>
+                <p class="text-green-100 text-sm opacity-90">Terima kasih atas transaksi Anda.</p>
+            </div>
+            
+            <div class="pt-16 pb-6 px-6">
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-1">Total Pembayaran</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white mb-6" id="success-amount">Rp 0</p>
+                
+                <div class="space-y-3">
+                    <button onclick="app.printReceipt()" class="w-full border-2 border-primary text-primary hover:bg-teal-50 dark:hover:bg-teal-900/30 font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-print"></i> Cetak Struk
+                    </button>
+                    <button onclick="app.closeSuccessAndGoHome()" class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold py-3 px-4 rounded-xl transition-all">
+                        Kembali ke Beranda
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-[70] flex flex-col gap-2"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

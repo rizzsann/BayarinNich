@@ -82,4 +82,4 @@ Berikut adalah tampilan antarmuka optimal untuk layar Mobile:
 ## 🌐 Link Demo Aplikasi
 Aplikasi dapat diakses secara langsung melalui tautan berikut jika telah di-deploy:
 - **Netlify :** `bayarinnich.netlify.app`
-- **Video Tutorial Penggunaan (YouTube):** `[Tautan Video Demo Maksimal 5 Menit]`
+- **Video Tutorial Penggunaan (YouTube):** `https://youtu.be/1o5YxJ8YqnA`
